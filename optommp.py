@@ -13,7 +13,7 @@ def request_header(tcode, tl=16):
 
 def pack_quadlet_read_request(start_address, tl=16):
     """Returns packed quadlet read request"""
-    return struct.pack('>4s2xHI', request_header(tl, 4),
+    return struct.pack('>4s2xHI', request_header(4, tl),
                        (start_address >> 32), (start_address & (2 ** 32 - 1)))
 
 
@@ -21,7 +21,7 @@ def pack_block_read_request(start_address, data_length, tl=16):
     """Returns packed block read request"""
     # This packs the arguments into the message format specified
     # by Opto22 Form 1465 "OptoMMP Protocol Guide"
-    return struct.pack('>4s2xHIH2x', request_header(tl, 5),
+    return struct.pack('>4s2xHIH2x', request_header(5, tl),
                        (start_address >> 32), (start_address & (2 ** 32 - 1)),
                        data_length)
 
@@ -39,8 +39,8 @@ def verify_response_header(response, tcode, tl=16):
 
 def unpack_quadlet_read_response(response, tl=16):
     """Returns UINT from quadlet response"""
-    verified = verify_response_header(response, 7, tl)
-    return struct.unpack('>4xI', verified)
+    verified = verify_response_header(response, 6, tl)
+    return struct.unpack('>4xI', verified)[0]
 
 
 def unpack_block_read_response(response, tl=16):
